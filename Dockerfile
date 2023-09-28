@@ -1,8 +1,18 @@
+# Use Python 3.11.5 as the base image
 FROM python:3.11.5
+
+# Set the working directory to /DisBotPython
 WORKDIR /DisBotPython
-COPY requirements.txt /DisBotPython/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+
 COPY . /DisBotPython/
-EXPOSE 8080
+
+# Upgrade pip and install the required packages
+RUN pip install --upgrade pip && \
+  pip install -r requirements.txt
+
+# Expose port 8080
+ENV PORT=8080
+EXPOSE ${PORT}
+
+# Run main.py when the container launches
 CMD python main.py

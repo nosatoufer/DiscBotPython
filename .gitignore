@@ -1,3 +1,5 @@
 responses.py
 token.json
 commands_data.pkl
+
+__pycache__

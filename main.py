@@ -18,10 +18,10 @@ def run_discord_bot():
 if __name__ == '__main__':
 
     socket_server_process = multiprocessing.Process(target=run_socket_server)
-    run_discord_bot = multiprocessing.Process(target=run_discord_bot)
+    discord_bot = multiprocessing.Process(target=run_discord_bot)
 
     socket_server_process.start()
-    run_discord_bot.start()
+    discord_bot.start()
 
     socket_server_process.join()
-    run_discord_bot.join()
+    discord_bot.join()
