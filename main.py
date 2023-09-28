@@ -5,8 +5,7 @@ import os
 
 class MyHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/healtz':
-            self.send_response(200)
+        self.send_response(200)
 
 # This is for health check
 def run():

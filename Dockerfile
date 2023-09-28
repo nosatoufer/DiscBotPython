@@ -6,9 +6,8 @@ WORKDIR /DisBotPython
 
 COPY . /DisBotPython/
 
-# Upgrade pip and install the required packages
-RUN pip install --upgrade pip && \
-  pip install -r requirements.txt
+# Install the required packages
+RUN pip install -r requirements.txt
 
 # Expose port 8080
 ENV PORT=10000
