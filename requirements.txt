@@ -1,2 +1,2 @@
 discord==2.3.2
-multiprocess=0.70.15
+multiprocess==0.70.15
