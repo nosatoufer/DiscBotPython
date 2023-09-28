@@ -5,7 +5,7 @@ import os
 
 # This is for render
 def run_socket_server():
-    port = os.environ.get('PORT') or 8080
+    port = int(os.environ.get('PORT')) or 8080
     mytcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mytcp.bind(('0.0.0.0', port))
     mytcp.listen(1)
