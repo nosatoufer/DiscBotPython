@@ -11,7 +11,7 @@ RUN pip install --upgrade pip && \
   pip install -r requirements.txt
 
 # Expose port 8080
-ENV PORT=8080
+ENV PORT=10000
 EXPOSE ${PORT}
 
 # Run main.py when the container launches

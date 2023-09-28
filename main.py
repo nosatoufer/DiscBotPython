@@ -1,16 +1,19 @@
 import bot
 import multiprocessing
-import socket
+import http.server
 import os 
 
-# This is for render
-def run_socket_server():
-    port = int(os.environ.get('PORT')) or 8080
-    mytcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    mytcp.bind(('0.0.0.0', port))
-    mytcp.listen(1)
-    while(1):
-        mytcp.listen(1)
+class MyHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/healtz':
+            self.send_response(200)
+
+# This is for health check
+def run():
+    port = int(os.environ.get('PORT') or 10000) 
+    server_address = ('', port)
+    httpd = http.server.HTTPServer(server_address, MyHandler)
+    httpd.serve_forever()
 
 
 def run_discord_bot():
@@ -19,7 +22,7 @@ def run_discord_bot():
 
 if __name__ == '__main__':
 
-    socket_server_process = multiprocessing.Process(target=run_socket_server)
+    socket_server_process = multiprocessing.Process(target=run)
     discord_bot = multiprocessing.Process(target=run_discord_bot)
 
     socket_server_process.start()
