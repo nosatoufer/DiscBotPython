@@ -9,7 +9,7 @@ COPY . /DisBotPython/
 # Install the required packages
 RUN pip install -r requirements.txt
 
-# Expose port 8080
+# Expose port 10000
 ENV PORT=10000
 EXPOSE ${PORT}
 

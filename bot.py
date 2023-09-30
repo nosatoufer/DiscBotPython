@@ -1,6 +1,7 @@
 import discord
 import pickle
 import json
+import streamlit as st
 
 commands = {}
 
@@ -58,9 +59,12 @@ def handle_response(msg) -> str:
 
     
 def get_token() -> str:
+    return st.secrets["TOKEN"]
+    """
     with open('token.json', 'r') as f :
         data = json.load(f)
     return data["BOT_TOKEN"]
+    """
 
 def run_discord_bot():
     intents = discord.Intents.default()
