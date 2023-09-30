@@ -1,9 +1,22 @@
 import discord
+from discord.ext import commands
 import pickle
 import json
 import streamlit as st
 
-commands = {}
+memes = {}
+
+class Bot(discord.ext ):
+    async def async_cleanup(self):  # example cleanup function
+        print("Cleaning up!")
+
+    async def close(self):
+        # do your cleanup here
+        await self.async_cleanup()
+        
+        await super().close()  # don't forget this!
+
+
 
 async def send_message(message, user_message):
     try:
@@ -15,29 +28,29 @@ async def send_message(message, user_message):
 
 def update_backup():
     with open('commands_data.pkl', 'wb') as f:
-        pickle.dump(commands, f)
+        pickle.dump(memes, f)
 
 def load_backup():
-    global commands
+    global memes
     try :
         with open('commands_data.pkl', 'rb') as f:
-            commands = pickle.load(f)
+            memes = pickle.load(f)
     except IOError:
         print('no file')
 
 
 def add_cmd(key, value) -> str:
-    if commands.get(key) != None:
-        return 'This command already exists with this value : ' + commands[key]
+    if memes.get(key) != None:
+        return 'This command already exists with this value : ' + memes[key]
     
-    commands[key] = value
+    memes[key] = value
     update_backup()
     return 'New command "!'+ key + '" added : ' + value
 
 def del_cmd(key) -> str:
-    if commands.get(key) == None:
+    if memes.get(key) == None:
         return 'There is no command with this name'
-    del commands[key]
+    del memes[key]
     update_backup()
     return "Command removed."
 
@@ -45,8 +58,8 @@ def del_cmd(key) -> str:
 def handle_response(msg) -> str:
     msgs = msg.split(' ')
 
-    if commands.get(msgs[0]) != None:
-        return commands[msgs[0]]
+    if memes.get(msgs[0]) != None:
+        return memes[msgs[0]]
 
     if msgs[0] == 'add':
         return add_cmd(msgs[1], msgs[2])
@@ -89,4 +102,4 @@ def run_discord_bot():
             msg = msg[1:]
             await send_message(message, msg)
     
-    client.run(get_token())
+    client.run(get_token(), reconnect=False)
