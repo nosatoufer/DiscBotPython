@@ -2,19 +2,8 @@ import discord
 from discord.ext import commands
 import pickle
 import json
-import streamlit as st
 
 memes = {}
-
-class Bot(discord.ext ):
-    async def async_cleanup(self):  # example cleanup function
-        print("Cleaning up!")
-
-    async def close(self):
-        # do your cleanup here
-        await self.async_cleanup()
-        
-        await super().close()  # don't forget this!
 
 
 
@@ -68,16 +57,16 @@ def handle_response(msg) -> str:
         return del_cmd(msgs[1])
     
     if msgs[0] == 'help':
-        return 'help'    
+        return 'help'
+    
+    if msgs[0] == 'commands':
+        return '..|..'
 
     
 def get_token() -> str:
-    return st.secrets["TOKEN"]
-    """
     with open('token.json', 'r') as f :
         data = json.load(f)
     return data["BOT_TOKEN"]
-    """
 
 def run_discord_bot():
     intents = discord.Intents.default()
