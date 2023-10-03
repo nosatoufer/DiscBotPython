@@ -11,7 +11,7 @@ std_cmd = ["add", "del", "help", "commands"]
 async def send_message(message, user_message):
     try:
         response = handle_response(user_message)
-        if response != None:
+        if response is not None:
             await message.channel.send(response)
     except Exception as e:
         print(e)
@@ -33,7 +33,7 @@ def add_cmd(key, value) -> str:
     global std_cmd
     if key in std_cmd:
         return "Fuck off Zyn :fuck:."
-    if memes.get(key) != None:
+    if memes.get(key) is not None:
         return 'This command already exists with this value : ' + memes[key]
     
     memes[key] = value
@@ -41,7 +41,7 @@ def add_cmd(key, value) -> str:
     return 'New command "!'+ key + '" added : ' + value
 
 def del_cmd(key) -> str:
-    if memes.get(key) == None:
+    if memes.get(key) is None:
         return 'There is no command with this name'
     del memes[key]
     update_backup()
@@ -57,7 +57,7 @@ def handle_commands() -> str:
 def handle_response(msg) -> str:
     msgs = msg.split(' ')
 
-    if memes.get(msgs[0]) != None:
+    if memes.get(msgs[0]) is not None:
         return memes[msgs[0]]
 
     if msgs[0] == 'add':
@@ -79,11 +79,11 @@ def get_token() -> str:
     return data["BOT_TOKEN"]
 
 def run_discord_bot():
+    load_backup()
+
     intents = discord.Intents.default()
     intents.message_content = True
-
     bot = commands.Bot(command_prefix='$', intents=intents)
-
 
     async def fruits_autocomplete(
         interaction: discord.Interaction,
@@ -100,28 +100,19 @@ def run_discord_bot():
     async def fruits(interaction: discord.Interaction, fruit: str):
         await interaction.response.send_message(f'Your favourite fruit seems to be {fruit}')
 
-
-
-    bot.run(get_token(), reconnect=False)
-
-    client = discord.Client(intents = intents, )
-    load_backup()
-
-    @client.event
+    @bot.event
     async def on_ready():
-        print(f'{client.user} is running')
+        print(f'{bot.user} is running')
 
-    @client.event
+    @bot.event
     async def on_message(message):
-        if message.author == client.user:
+        if message.author == bot.user:
             return
-        
         msg = str(message.content)
-
         if msg[0] != '!':
             return
         else:
             msg = msg[1:]
             await send_message(message, msg)
     
-    client.run(get_token(), reconnect=False)
+    bot.run(get_token(), reconnect=False)
