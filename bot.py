@@ -1,10 +1,11 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import pickle
 import json
 
 memes = {}
-
+std_cmd = ["add", "del", "help", "commands"]
 
 
 async def send_message(message, user_message):
@@ -29,6 +30,9 @@ def load_backup():
 
 
 def add_cmd(key, value) -> str:
+    global std_cmd
+    if key in std_cmd:
+        return "Fuck off Zyn :fuck:."
     if memes.get(key) != None:
         return 'This command already exists with this value : ' + memes[key]
     
@@ -43,6 +47,12 @@ def del_cmd(key) -> str:
     update_backup()
     return "Command removed."
 
+def handle_commands() -> str:
+    reply = ''
+    global std_cmd
+    for c in std_cmd :
+        reply += f'{c} : usage {"TODO usage"}.\n'
+    return reply
 
 def handle_response(msg) -> str:
     msgs = msg.split(' ')
@@ -60,7 +70,7 @@ def handle_response(msg) -> str:
         return 'help'
     
     if msgs[0] == 'commands':
-        return '..|..'
+        return handle_commands()
 
     
 def get_token() -> str:
@@ -71,7 +81,30 @@ def get_token() -> str:
 def run_discord_bot():
     intents = discord.Intents.default()
     intents.message_content = True
-    client = discord.Client(intents = intents)
+
+    bot = commands.Bot(command_prefix='$', intents=intents)
+
+
+    async def fruits_autocomplete(
+        interaction: discord.Interaction,
+        current: str,
+    ) -> list[app_commands.Choice[str]]:
+        fruits = ['Banana', 'Pineapple', 'Apple', 'Watermelon', 'Melon', 'Cherry']
+        return [
+            app_commands.Choice(name=fruit, value=fruit)
+            for fruit in fruits if current.lower() in fruit.lower()
+        ]
+    
+    @bot.command()
+    @app_commands.autocomplete(item=fruits_autocomplete)
+    async def fruits(interaction: discord.Interaction, fruit: str):
+        await interaction.response.send_message(f'Your favourite fruit seems to be {fruit}')
+
+
+
+    bot.run(get_token(), reconnect=False)
+
+    client = discord.Client(intents = intents, )
     load_backup()
 
     @client.event
